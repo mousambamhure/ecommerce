@@ -18,7 +18,7 @@ const closeModal = document.getElementById("closeModal");
 
 // Step 2: Initial Project Data
 
-const products = [
+const defaultProducts = [
     { id: 1, name: "Wireless Headphones", price: 1299, Categories: "electronics", rating: 4.5, image: "https://m.media-amazon.com/images/I/31818K7ii3L._SY300_SX300_QL70_FMwebp_.jpg" },
     { id: 2, name: "Bluetooth Speaker", price: 899, Categories: "electronics", rating: 4.2, image: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400" },
     { id: 3, name: "Smart Watch", price: 1599, Categories: "electronics", rating: 4.3, image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" },
@@ -31,10 +31,29 @@ const products = [
     { id: 10, name: "Coffee Mug", price: 299, Categories: "home & living", rating: 4.0, image: "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=400" }
 ];
 
+let products = defaultProducts;
+try {
+    const savedProducts = JSON.parse(localStorage.getItem("ecomstoreProducts") || "null");
+    if (Array.isArray(savedProducts) && savedProducts.length && savedProducts.every(product =>
+        product && Number.isFinite(Number(product.id)) && typeof product.name === "string" && Number.isFinite(Number(product.price))
+    )) products = savedProducts;
+    else localStorage.setItem("ecomstoreProducts", JSON.stringify(defaultProducts));
+} catch {
+    localStorage.setItem("ecomstoreProducts", JSON.stringify(defaultProducts));
+}
+
 
 // Step 3: Cart Data
 
-const cart = [];
+let cart = [];
+try {
+    const savedCart = JSON.parse(localStorage.getItem("ecomstoreCart") || "[]");
+    if (Array.isArray(savedCart)) cart = savedCart.filter(item =>
+        item && Number.isFinite(Number(item.id)) && Number(item.quantity) > 0 && products.some(product => product.id === Number(item.id))
+    ).map(item => ({ ...products.find(product => product.id === Number(item.id)), quantity: Number(item.quantity) }));
+} catch {
+    cart = [];
+}
 
 
 // Step 4: Helper Function To Escape HTML
@@ -426,6 +445,7 @@ const closeCart = document.getElementById("closeCart");
 const cartItemsContainer = document.getElementById("cartItems");
 const cartTotal = document.getElementById("cartTotal");
 const clearCartButton = document.getElementById("clearCart");
+const checkoutButton = document.getElementById("checkoutButton");
 
 
 // Add Product To Cart
@@ -464,13 +484,25 @@ function addTocart(productId) {
 
 
     updateCart();
+    showCartNotice(`${product.name} has been added to your cart successfully.`);
 
+}
+
+let cartNoticeTimer;
+function showCartNotice(message) {
+    const notice = document.getElementById("cartNotice");
+    notice.textContent = message;
+    notice.classList.remove("hidden");
+    clearTimeout(cartNoticeTimer);
+    cartNoticeTimer = setTimeout(() => notice.classList.add("hidden"), 2600);
 }
 
 
 // Update Cart
 
 function updateCart() {
+
+    localStorage.setItem("ecomstoreCart", JSON.stringify(cart));
 
     const totalItems = cart.reduce(
         (total, item) => total + item.quantity,
@@ -698,9 +730,21 @@ clearCartButton.addEventListener("click", function() {
 
 });
 
+checkoutButton.addEventListener("click", function() {
+    if (cart.length === 0) return;
+    localStorage.setItem("ecomstoreCart", JSON.stringify(cart));
+    window.location.href = "checkout.html";
+});
+
 
 // =====================================================
 // INITIAL CART DISPLAY
 // =====================================================
 
 updateCart();
+
+
+
+
+
+

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - EcomStore</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="checkout-header">
+        <a href="index.html" class="logo">EcomStore</a>
+        <a class="back-link" href="index.html">Continue shopping</a>
+    </header>
+    <main class="checkout-page">
+        <div class="checkout-title">
+            <p class="eyebrow">Secure checkout</p>
+            <h1>Complete your order</h1>
+            <p>Enter your delivery details, apply a coupon, then continue to demo payment.</p>
+        </div>
+        <div class="checkout-layout">
+            <form id="checkoutForm" class="checkout-card">
+                <section class="checkout-section">
+                    <h2>Contact and delivery</h2>
+                    <div class="checkout-fields">
+                        <label>Full name<input name="name" autocomplete="name" required placeholder="Alex Johnson"></label>
+                        <label>Email address<input name="email" type="email" autocomplete="email" required placeholder="alex@example.com"></label>
+                        <label class="field-wide">Delivery address<input name="address" autocomplete="street-address" required placeholder="Street address"></label>
+                        <label>City<input name="city" autocomplete="address-level2" required></label>
+                        <label>Postal code<input name="postal" autocomplete="postal-code" required></label>
+                    </div>
+                </section>
+                <section class="checkout-section">
+                    <h2>Coupon code</h2>
+                    <p class="demo-note">Try <strong>SAVE10</strong> for 10% off your items.</p>
+                    <div class="coupon-row">
+                        <label class="coupon-label" for="couponCode">Enter coupon</label>
+                        <input id="couponCode" placeholder="SAVE10" autocomplete="off">
+                        <button id="applyCoupon" type="button" class="secondary-button">Apply</button>
+                    </div>
+                    <p id="couponFeedback" class="coupon-feedback" aria-live="polite"></p>
+                </section>
+                <button id="proceedPayment" class="place-order-button" type="button">Proceed to payment</button>
+                <section id="paymentSection" class="checkout-section hidden">
+                    <h2>Demo payment details</h2>
+                    <p class="demo-note">Sample details only. Payment information is never stored or sent.</p>
+                    <div class="checkout-fields">
+                        <label class="field-wide">Name on card<input name="cardName" autocomplete="cc-name" placeholder="Alex Johnson"></label>
+                        <label class="field-wide">Card number<input name="cardNumber" inputmode="numeric" autocomplete="cc-number" minlength="12" maxlength="19" placeholder="4242 4242 4242 4242"></label>
+                        <label>Expiry date<input name="expiry" autocomplete="cc-exp" placeholder="MM/YY"></label>
+                        <label>Security code<input name="cvv" inputmode="numeric" autocomplete="cc-csc" minlength="3" maxlength="4" placeholder="123"></label>
+                    </div>
+                    <button class="place-order-button" type="submit">Place demo order</button>
+                </section>
+                <p class="demo-disclaimer">Demo experience only. Do not enter real payment information.</p>
+            </form>
+            <aside class="checkout-card order-card">
+                <h2>Your order</h2>
+                <div id="checkoutItems"></div>
+                <div class="order-total"><span>Total</span><strong id="checkoutTotal">₹0</strong></div>
+            </aside>
+        </div>
+    </main>
+    <div id="successModal" class="success-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+        <div class="success-card">
+            <div class="success-check" aria-hidden="true">✓</div>
+            <h2 id="successTitle">Order placed successfully!</h2>
+            <p id="successMessage">Thanks for your order.</p>
+            <a class="place-order-button success-home" href="index.html">Back to store</a>
+        </div>
+    </div>
+    <script src="checkout.js"></script>
+</body>
+</html>
